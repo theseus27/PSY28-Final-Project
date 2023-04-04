@@ -14,7 +14,7 @@ const VOWELS = ['a', 'e', 'i', 'o', 'u', 'y'];
 const ALL_LETTERS = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z', 'a', 'e', 'i', 'o', 'u'];
 
 const numWords = 10;
-const WORD_DELAY = 100;
+const WORD_DELAY = 1000;
 
 function startPage(startGame) {
 
