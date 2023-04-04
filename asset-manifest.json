@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/PSY28-Final/static/css/main.aa315db8.css",
-    "main.js": "/PSY28-Final/static/js/main.49b5becd.js",
-    "static/js/787.cda612ba.chunk.js": "/PSY28-Final/static/js/787.cda612ba.chunk.js",
-    "index.html": "/PSY28-Final/index.html",
-    "main.aa315db8.css.map": "/PSY28-Final/static/css/main.aa315db8.css.map",
-    "main.49b5becd.js.map": "/PSY28-Final/static/js/main.49b5becd.js.map",
-    "787.cda612ba.chunk.js.map": "/PSY28-Final/static/js/787.cda612ba.chunk.js.map"
+    "main.css": "/PSY28-Final-Project/static/css/main.aa315db8.css",
+    "main.js": "/PSY28-Final-Project/static/js/main.c17ad928.js",
+    "static/js/787.cda612ba.chunk.js": "/PSY28-Final-Project/static/js/787.cda612ba.chunk.js",
+    "index.html": "/PSY28-Final-Project/index.html",
+    "main.aa315db8.css.map": "/PSY28-Final-Project/static/css/main.aa315db8.css.map",
+    "main.c17ad928.js.map": "/PSY28-Final-Project/static/js/main.c17ad928.js.map",
+    "787.cda612ba.chunk.js.map": "/PSY28-Final-Project/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.aa315db8.css",
-    "static/js/main.49b5becd.js"
+    "static/js/main.c17ad928.js"
   ]
 }
