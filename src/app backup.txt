@@ -1,0 +1,303 @@
+import React from 'react';
+import Grid from '@mui/material/Grid';
+import { Button, TextField, Typography, Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+
+import './App.css';
+import { data } from './freqs.js';
+//import { wordlist } from './wordlist.js'
+
+const CENTER_WIDTH = 6
+const SIDE_WIDTH = (12 - CENTER_WIDTH) / 2
+const WORD_DELAY = 1500
+
+function App() {
+  const numWords = 15;
+  const [word, setWord] = React.useState("");
+  const [score, setScore] = React.useState(0);
+  const [scorecolor, setScorecolor] = React.useState("#bbb");
+  const [inGame, setInGame] = React.useState(false);
+  const [currentWord, setCurrentWord] = React.useState(0);
+  const [wordList, setWordList] = React.useState(0);
+
+  const example_words = ['sadf', 'fdsd', 'vcxc', 'ewrr', 'gfdb'];
+  setWordList(example_words);
+
+  const increment_word = () => {
+    setCurrentWord(currentWord => currentWord + 1)
+    if (currentWord + 1 < example_words.length) {
+      setTimeout(increment_word, WORD_DELAY)
+    }
+  }
+
+    //TODO: Pull 5 of each type of word
+  // const create_wordlist = () => {
+  //   let easy = 0;
+  //   let medium = 0; 
+  //   let hard = 0;
+
+  //   while (wordList.length < numWords) {
+
+  //   }
+  // }
+
+  return (
+    <>
+      {/* Frequency / Rank */}
+      {!inGame &&
+        <Box>
+          <Grid container style={{ textAlign: 'center' }} spacing={6}>
+
+            <Grid item xs={12}></Grid>
+
+            <Grid item xs={4}></Grid>
+            <Grid item xs={4}>
+              <Typography variant="h3" fontFamily="arial" align="center">
+                N-GRAMS
+              </Typography>
+              <br />
+              <Typography variant="h6" fontFamily="arial" align="center" color="#7c7c7c">
+                Jimmy Maslen and Theseus Lim
+                <br/>
+                PSY28 Spr 23
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Button id="gamebutton" variant="contained" onClick={() => { setInGame(true) }}>
+                Test Your Memory Against Different Word Scores!
+              </Button>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Grid container>
+
+                <Grid item xs={4}> </Grid>
+
+                <Grid item xs={4}>
+                  <TextField
+                    label="Enter A Word (lowercase letters only)"
+                    variant="outlined"
+                    fullWidth="true"
+                    onChange={event => {
+                      setWord(event.target.value);
+                      setScore(word_score(event.target.value).toFixed(2));
+                      setScorecolor(score_color(event.target.value));
+                    }}
+                    value={word}
+                  />
+                </Grid>
+
+                <Grid item xs={4}> </Grid>
+
+              </Grid>
+            </Grid>
+
+            {
+              word.length > 0 &&
+              <Grid item xs={12}>
+                <Typography id="wordscore" color={scorecolor}>
+                  Word Score: {score}
+                </Typography>
+              </Grid>
+            }
+
+            <Grid item xs={SIDE_WIDTH}></Grid>
+            <Grid item xs={CENTER_WIDTH}>
+              {[1, 2, 3].map(gram =>
+                word.length >= gram &&
+                <Box style={{ marginBottom: 50 }}>
+                  <Typography class="nheader">
+                    {gram}-grams
+                  </Typography>
+                  <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell class="firstrow">String</TableCell>
+                          <TableCell class="firstrow" align="right">Frequency</TableCell>
+                          <TableCell class="firstrow" align="right">Rank</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {split_grams(word, gram).map(string => (
+                          <TableRow
+                            key={string}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell class="cellvalue" component="th" scope="row">
+                              {string}
+                            </TableCell>
+                            <TableCell class="cellvalue" align="right">{(get_frequency(string) * 100).toFixed(3)}%</TableCell>
+                            <TableCell class="cellvalue" align="right">{get_rank(string)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              )}
+            </Grid>
+            <Grid item xs={SIDE_WIDTH}></Grid>
+            {word.length > 0 && <Grid item xs={12}><hr /></Grid>}
+            <Grid item xs={SIDE_WIDTH}></Grid>
+            <Grid item xs={CENTER_WIDTH}>
+              {
+                word.length > 0 &&
+                <>
+                  <Typography variant='h5' color="#000">
+                    <b>How it Works</b>
+                  </Typography>
+                  <br />
+                  <Typography id='about' align='left'>
+                    The frequencies used in this project are based on a list of the 1000 most common English words.
+                    <br /><br />
+                    Each <b>frequency</b> and <b>rank</b> value is calculated against that specific n-gram.
+                    <br />
+                    &emsp; EX. 'cha' has a frequency of .17%, meaning that of all 3-grams, it occurs about 17 times for every 1000.
+                    <br />
+                    &emsp; EX. 'ca' has a rank of 53, then it is the 53rd most common 2-gram.
+                    <br /><br />
+                    n stops at 3, at which point the frequencies of 4-grams, 5-grams, etc. are insignificantly small.
+                  </Typography>
+                </>
+              }
+            </Grid>
+            <Grid item xs={12}></Grid>
+          </Grid>
+        </Box>
+      }
+
+      { /* Game */ }
+      {
+        inGame && currentWord === 0 &&
+        <Box style={{ textAlign: "center" }}>
+          <Typography>
+            Welcome to the Game. Try to remember as many words as you can.
+          </Typography>
+          <Button>
+            onClick={increment_word}
+            variant="outlined"
+            Begin
+          </Button>
+        </Box>
+      }
+      {
+        inGame && currentWord > 0 &&
+        <Box style={{ textAlign: "center" }}>
+          <Typography>
+            {example_words[currentWord]}
+          </Typography>
+        </Box>
+      }
+      {
+        inGame && currentWord >= example_words.length &&
+        <Box style={{ textAlign: "center" }}>
+          <Typography>
+            What words did you remember?
+          </Typography>
+          <TextField multiline />
+          <Button variant="contained"> Submit </Button>
+        </Box>
+      }
+    </>
+  );
+}
+
+/* WORD SCORE */
+function word_score(str) {
+  let score = 0;
+  let maxes = [.134, .025, .00993];
+
+  for (let gram = 0; gram < Math.min(2, str.length); gram++) {
+    let frequencies = [];
+    frequencies = frequencies.concat(split_grams(str, gram + 1).map(substr => get_frequency(substr)));
+    var total = 0;
+    for (var i = 0; i < frequencies.length; i++) {
+      total += Number(frequencies[i]);
+    }
+    if (frequencies.length === 0) {
+      score += 0;
+    } else {
+      var avg = total / frequencies.length;
+      console.log(Number(avg));
+      score += Number(avg) / maxes[gram] * 100;
+    }
+  }
+
+  console.log(score);
+  score /= Math.min(4, str.length);
+
+  if (score > 100) {
+    score = 100;
+  }
+  if (score < 0) {
+    score = 0;
+  }
+
+  return score;
+}
+
+/* SCORE COLOR */
+function score_color(word) {
+
+  let score = word_score(word);
+
+  function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  }
+
+  function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+
+  let redscore = Math.round((((100 - score) / 100) * 255));
+  let greenscore = Math.round(((score / 100) * 255));
+
+  if (redscore < 0) {
+    redscore = 0;
+  }
+  if (greenscore < 0) {
+    greenscore = 0;
+  }
+  if (redscore > 255) {
+    redscore = 255;
+  }
+  if (greenscore > 255) {
+    greenscore = 255;
+  }
+
+  return rgbToHex(redscore, greenscore, 0);
+}
+
+/* SPLIT GRAMS */
+function split_grams(str, ngram) {
+  let grams = []
+  for (let i = 0; i <= str.length - ngram; i++) {
+    let substr = str.substring(i, i + ngram);
+    if (!grams.includes(substr)) {
+      grams.push(substr);
+    }
+  }
+  console.log(grams);
+  return grams;
+}
+
+/* GET FREQUENCY */
+function get_frequency(str) {
+  for (let i = 0; i < data.length; i++) {
+    if (data[i][1] === str) {
+      return data[i][2] / data[i][3];
+    }
+  }
+}
+
+/* GET RANK */
+function get_rank(string) {
+  for (let i = 0; i < data.length; i++) {
+    if (data[i][1] === string) {
+      return data[i][4];
+    }
+  }
+}
+
+export default App;

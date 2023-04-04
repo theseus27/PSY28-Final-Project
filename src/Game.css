@@ -1,0 +1,22 @@
+.MuiBox-root {
+  width: 100%;
+}
+
+.result-header {
+  font-size: 20px;
+}
+
+.continuebutton {
+  width: 175px;
+  height: 60px;
+  margin-top: 20px;
+  font-size: 24px;
+  background-color:rgb(46, 88, 212);
+  color: rgb(224, 224, 224);
+  font-weight: 600;
+  outline-style: hidden;
+}
+
+.introprompt {
+  font-size: 30px;
+}
